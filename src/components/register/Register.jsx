@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 
 
 
+
 const Register = () => {
  const disptch=useDispatch()
     const {loading, error, isLogged}=useSelector((state)=>state.authReducer)

@@ -1,100 +1,160 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import trainerServices from "../helper/trainer/trainerServices"
 
-export let userThunk= createAsyncThunk("auth/register",async(payload,thunkAPI)=>{
-try {
-    console.log(payload);
-    
-    let data=await trainerServices.registerTrainer(payload)
-    console.log(data);
-    
-    return data 
-} catch (error) {
-    
-    return thunkAPI.rejectWithValue(error.message || "Something went wrong");
-}
-})
-
-export let userLoginThunk= createAsyncThunk("auth/login",async(payload,thunkAPI)=>{
+export const userThunk = createAsyncThunk(
+  "auth/register",
+  async (payload, thunkAPI) => {
     try {
-        // console.log(payload);
-        
-        let {data}=await trainerServices.loginTrainer(payload)
-        console.log(data);
-        
-        return data 
+      const { data } = await trainerServices.registerTrainer(payload)
+      return data
     } catch (error) {
-    console.log(error);
-    return thunkAPI.rejectWithValue(error.response?.data?.message);
-}
-})
-const initialState={
-    isLogged:false,
-    username:null,
-    email:null,
-    loggedId:null,
-    token:null,
-    loading:false,
-    error:null,
-    allTrainers:[]
-}
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || "Something went wrong"
+      )
+    }
+  }
+)
 
-export const AuthSlice=createSlice({
-    name:"auth",
-    initialState,
-    reducers:{
-        loggedUser:(state,action)=>{
-            let {email,username,loggedId,token}=action.payload
-            state.email=email,
-            state.loggedId=loggedId,
-            state.username=username,
-            state.token=token,
-            state.isLogged=true,
-            state.allTrainers=[]
-        },
-        loggedOutUser:(state,action)=>{
-            let {email,username,loggedId,token}=action.payload
-            state.email=email,
-            state.loggedId=loggedId,
-            state.username=username,
-            state.token=token,
-            state.isLogged=true,
-            state.allTrainers=[]
+export const userLoginThunk = createAsyncThunk(
+  "auth/login",
+  async (payload, thunkAPI) => {
+    try {
+      const { data } = await trainerServices.loginTrainer(payload)
+      return data
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Login failed"
+      )
+    }
+  }
+)
 
-        }
-    },
-    extraReducers:(builder)=>{
-        builder.addCase(userThunk.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      }).addCase(userThunk.rejected, (state, action) => {
-        state.isLogged = false;
-        state.loading = false;
-        state.error = action.payload.response.data || "Login failed";
-      }).addCase(userLoginThunk.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      }).addCase(userLoginThunk.fulfilled,(state,action)=>{
-            console.log(action);
-            
- const { token } = action.payload;
- const { email,id,username } = action.payload.user;
-        state.email = email;
-        state.loggedId = id;
-        state.username = username;
-        state.token = token;
-        state.isLogged = true;
-        state.loading = false;
-        state.allTrainers=[];
+export const getAllTrainersThunk = createAsyncThunk(
+  "trainers/getAll",
+  async (_, thunkAPI) => {
+    try {
+      const { data } = await trainerServices.getAllTrainer()
+      return data
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Failed to fetch trainers"
+      )
+    }
+  }
+)
 
-        })   .addCase(userLoginThunk.rejected, (state, action) => {
-        state.isLogged = false;
-        state.loading = false;
-        state.error =  action.payload || "Login failed";
-      });
+export const addTrainerThunk=createAsyncThunk("addTrainer",async(payload,thunkAPI)=>{
+    try {
+        let {data}=await trainerServices.addTrainer(payload)
+        console.log(data);
+        return data
+        
+    } catch (error) {
+       return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Failed to add trainers"
+      ) 
     }
 })
 
+const initialState = {
+  isLogged: false,
+  username: null,
+  email: null,
+  loggedId: null,
+  token: null,
+  loading: false,
+  error: null,
+  allTrainers: [],
+  isTrainersPresent: true,
+}
 
-export const {loggedUser, loggedOutUser } =AuthSlice.actions
-export default AuthSlice.reducer;
+export const AuthSlice = createSlice({
+  name: "auth",
+  initialState,
+  reducers: {
+    loggedUser: (state, action) => {
+      const { email, username, loggedId, token } = action.payload
+      state.email = email
+      state.loggedId = loggedId
+      state.username = username
+      state.token = token
+      state.isLogged = true
+    },
+    loggedOutUser: (state) => {
+      state.email = null
+      state.loggedId = null
+      state.username = null
+      state.token = null
+      state.isLogged = false
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(userThunk.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(userThunk.fulfilled, (state) => {
+        state.loading = false
+      })
+      .addCase(userThunk.rejected, (state, action) => {
+        state.isLogged = false
+        state.loading = false
+        state.error = action.payload || "Registration failed"
+      })
+      .addCase(userLoginThunk.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(userLoginThunk.fulfilled, (state, action) => {
+        const { token, user } = action.payload
+        state.email = user?.email
+        state.loggedId = user?.id
+        state.username = user?.username
+        state.token = token
+        state.isLogged = true
+        state.loading = false
+      })
+      .addCase(userLoginThunk.rejected, (state, action) => {
+        state.isLogged = false
+        state.loading = false
+        state.error = action.payload || "Login failed"
+      })
+      .addCase(getAllTrainersThunk.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(getAllTrainersThunk.fulfilled, (state, action) => {
+        state.allTrainers = action.payload
+        state.isTrainersPresent = action.payload?.length > 0
+        state.loading = false
+      })
+      .addCase(getAllTrainersThunk.rejected, (state, action) => {
+        state.allTrainers = []
+        state.isTrainersPresent = false
+        state.loading = false
+        state.error = action.payload
+      })
+            .addCase(addTrainerThunk.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(addTrainerThunk.fulfilled, (state, action) => {
+        console.log(action.payload);
+        // console.log(state.allTrainers);
+        
+        state.allTrainers = [state.allTrainers,action.payload.trainer]
+        state.isTrainersPresent = action.payload?.length > 0
+        state.loading = false
+      })
+      .addCase(addTrainerThunk.rejected, (state, action) => {
+        state.allTrainers = state.allTrainers
+        state.isTrainersPresent = false
+        state.loading = false
+        state.error = action.payload
+      })
+  },
+})
+
+export const { loggedUser, loggedOutUser } = AuthSlice.actions
+export default AuthSlice.reducer

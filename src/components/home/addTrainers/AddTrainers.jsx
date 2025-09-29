@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { MdAlternateEmail } from 'react-icons/md'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import Loader from '../../loading/Loader'
+import { addTrainerThunk } from '../../../slices/AuthSlice'
 
 const AddTrainers = () => {
       const disptch=useDispatch()
@@ -23,7 +25,7 @@ const handelSubmit=(e)=>{
     let {name,subject}=formData
     let payload={name,subject}
     console.log(payload);
-    // disptch(userLoginThunk(payload))
+    disptch(addTrainerThunk(payload))
     // console.log(isLogged);
     
 }
@@ -43,11 +45,11 @@ const handelSubmit=(e)=>{
                         </div>
                             <div className={`flex flex-col w-full h-[40px] bg-transparent border relative rounded-2xl focus-within:border-0 focus-within:border-b-2 focus-within:rounded-none transition-all duration-200 ${name?"border-0 border-b-2 rounded-none":""}`}>
                               <div className='flex size-full absolute justify-center items-center px-2'>
-                                  <input type="email" id='email' className='size-full outline-0' name='name' onChange={handelChange}/>
+                                  <input type="text" id='name' className='size-full outline-0' name='name' onChange={handelChange}/>
                                   <MdAlternateEmail />
 
                               </div>
-                                <label htmlFor="email" className={`absolute pl-2 top-1.5 transition-all duration-200 [div:focus-within+&]:-top-2.5 [div:focus-within+&]:pl-2 [div:focus-within+&]:text-xs  ${name?"top-[-10px] pl-2 text-xs":""}`}>Name</label>
+                                <label htmlFor="name" className={`absolute pl-2 top-1.5 transition-all duration-200 [div:focus-within+&]:-top-2.5 [div:focus-within+&]:pl-2 [div:focus-within+&]:text-xs  ${name?"top-[-10px] pl-2 text-xs":""}`}>Name</label>
                             </div>
                              {/* <div className={`flex flex-col w-full h-[40px] bg-transparent border relative rounded-2xl focus-within:border-0 focus-within:border-b-2 focus-within:rounded-none  transition-all duration-200 ${username?"border-0 border-b-2 rounded-none":""}`}>
                                 <div className='flex size-full absolute justify-center items-center px-2'>
@@ -73,7 +75,7 @@ const handelSubmit=(e)=>{
                                 <label htmlFor="rePassword" className={`absolute pl-2 top-1.5 transition-all duration-200 [div:focus-within+&]:-top-2.5 [div:focus-within+&]:pl-2 [div:focus-within+&]:text-xs  ${rePassword?"top-[-10px] pl-2 text-xs":""}`}>Re-enter Password</label>
                             </div> */}
                              <div className={`w-full h-[40px] border flex justify-center items-center rounded-2xl  focus-within:border-0 focus-within:border-b-2 focus-within:rounded-none transition-all duration-200 ${subject?" border-0 border-b-2 rounded-none":""}`}>
-                                <select  className='w-full outline-0 p-4 rounded-2xl' onChange={handelChange} name='role' >
+                                <select  className='w-full outline-0 p-4 rounded-2xl' onChange={handelChange} name='subject' >
                                     <option value="" disabled>select</option>
                                     <option value="java" className='rounded-2xl bg-main-back'>Java</option>
                                     <option value="python">Python</option>
