@@ -83,6 +83,20 @@ export const allGroomingThunk=createAsyncThunk("allGrooming",async(_,thunkAPI)=>
     }
 })
 
+export const updateGroomingThunk=createAsyncThunk("updateGrooming",async(payload,thunkAPI)=>{
+    try {
+      const { id, ...rest } = payload;
+      const {data} = await trainerServices.updateGrooming(rest, id);
+      console.log(data);
+      return data;
+    } catch (error) {
+       return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Failed to add trainers"
+      ) 
+    }
+})
+
+
 const initialState = {
   isLogged: false,
   username: null,
@@ -208,7 +222,23 @@ export const AuthSlice = createSlice({
         state.allGrooming = state.allGrooming
         state.loading = false
         state.error = action.payload
-      }) 
+      }).addCase(updateGroomingThunk.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(updateGroomingThunk.fulfilled, (state, action) => {
+        console.log(action.payload);
+        // console.log(state.allTrainers);
+        
+        state.allGrooming = [...state.allGrooming.filter((val)=>val._id!=action.payload.grooming._id),action.payload.grooming]
+        state.loading = false
+        toast.success(action.payload.msg)
+      })
+      .addCase(updateGroomingThunk.rejected, (state, action) => {
+        state.allGrooming = state.allGrooming
+        state.loading = false
+        state.error = action.payload
+      })
   },
 })
 

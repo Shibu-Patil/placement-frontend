@@ -6,6 +6,7 @@ import DashBoard from "../components/home/dashboard/DashBoard";
 import AddGrooming from "../components/home/addGrooming/AddGrooming";
 import AddTrainers from "../components/home/addTrainers/AddTrainers";
 import SearchGrooming from "../components/home/searchGrooming/SearchGrooming";
+import UpdateGrooming from "../components/home/updateGrooimg/UpdateGrooming";
 
 const routes= createBrowserRouter([
     {
@@ -30,6 +31,9 @@ const routes= createBrowserRouter([
             },{
                 path:"/search-grooming",
                 element:<SearchGrooming></SearchGrooming>
+            },{
+                path:"update-grooming",
+                element:<UpdateGrooming></UpdateGrooming>
             }
         ]
     }

@@ -1,16 +1,20 @@
+// SearchGrooming.jsx
 import React from "react";
 import { useSelector } from "react-redux";
 import { FaCalendar, FaUsers, FaLaptop, FaClock } from "react-icons/fa";
-
-const InterviewCard = ({ data, onUpdate, onDelete,colo }) => {
+import { useNavigate } from "react-router-dom";
+import { FaCircleDot } from "react-icons/fa6";
+const InterviewCard = ({ data, onUpdate, onDelete, colo }) => {
+  // console.log(data.reasons);
+  
   return (
-    <div className={`w-full max-w-lg rounded-2xl shadow-lg  p-6 hover:shadow-2xl transition duration-300 border border-gray-200 ${colo}`}>
+    <div className={`w-full max-w-lg rounded-2xl shadow-lg p-6 hover:shadow-2xl transition duration-300 border border-gray-200 ${colo}`}>
       
       {/* Company + Mode */}
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-bold text-gray-800">{data.companyName}</h2>
-        <span className="px-3 py-1 text-sm rounded-full bg-blue-100 text-blue-600 font-medium">
-          {data.mode}
+        <span className="px-3 py-1 text-sm rounded-full bg-blue-100 text-blue-600 font-medium flex gap-3 justify-center items-center">
+          {data.mode} {data.mode=="Online"&& <FaCircleDot className="fill-green-600"/>}
         </span>
       </div>
 
@@ -30,7 +34,7 @@ const InterviewCard = ({ data, onUpdate, onDelete,colo }) => {
       <div className="flex justify-start mb-4">
         <div className="flex items-center gap-2 text-gray-600 text-sm w-1/2">
           <FaCalendar className="w-4 h-4" />
-          <span>Interview: {new Date(data.dateOfInterview).toLocaleDateString()}</span>
+          <span>Interview: {data.dateOfInterview ? new Date(data.dateOfInterview).toLocaleDateString() : "Not Scheduled"}</span>
         </div>
         <div className="flex items-center gap-2 text-gray-600 text-sm w-1/2">
           <FaCalendar className="w-4 h-4" />
@@ -59,13 +63,22 @@ const InterviewCard = ({ data, onUpdate, onDelete,colo }) => {
           Attended: {data.attendedStudents}
         </div>
         <div className="text-red-500 font-semibold">
-          Rejected: {data.rejectedStudents.length}
+          Rejected: {data.rejectedStudents[0]}
         </div>
         <div className="text-blue-600 font-semibold">
-          Placed: {data.placedStudents.length}
+          Placed: {data.placedStudents[0]}
         </div>
       </div>
 
+      {/* Rejection Reason */}
+<div className="h-20">
+        {data.rejectedStudents.length > 0 && data.reasons.length>0 && (
+        <div className="mb-4 text-red-600 break-all w-full h-full overflow-y-scroll">
+          <span className="font-semibold">Reason of Rejection:</span> {data.reasons[0]}
+        </div>
+      )}
+
+</div>
       {/* Skills */}
       <div className="mb-4">
         <span className="text-sm font-semibold text-gray-700">Skills:</span>
@@ -102,15 +115,15 @@ const InterviewCard = ({ data, onUpdate, onDelete,colo }) => {
 
 const SearchGrooming = () => {
   let { allGrooming } = useSelector((state) => state.authReducer);
+  const navigate = useNavigate();
 
   const handleUpdate = (item) => {
-    console.log("Update clicked:", item);
-    // Example: navigate("/update", { state: item })
+    navigate("/update-grooming", { state: item });
   };
 
   const handleDelete = (id) => {
     console.log("Delete clicked:", id);
-    // Example: dispatch(deleteGroomingThunk(id))
+    // dispatch(deleteGroomingThunk(id))
   };
 
   return (
@@ -123,7 +136,7 @@ const SearchGrooming = () => {
             data={item}
             onUpdate={handleUpdate}
             onDelete={handleDelete}
-            colo={!item.dateOfInterview?"bg-red-200":"bg-lime-100"}
+            colo={!item.dateOfInterview ? "bg-red-200" : "bg-lime-100"}
           />
         ))}
       </div>

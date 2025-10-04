@@ -27,6 +27,12 @@ addGrooming:async(payload)=>{
         // console.log(data);
         return data
 
+},updateGrooming:async(payload,id)=>{
+
+        let data=await AxiosInstance.put(`/groomings/${id}`,payload)
+        // console.log(data);
+        return data
+
 },
 getAllTrainer:async()=>{
 
