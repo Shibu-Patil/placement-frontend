@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import trainerServices from "../helper/trainer/trainerServices"
+import toast from "react-hot-toast"
 
 export const userThunk = createAsyncThunk(
   "auth/register",
@@ -56,6 +57,32 @@ export const addTrainerThunk=createAsyncThunk("addTrainer",async(payload,thunkAP
     }
 })
 
+export const addGroomingThunk=createAsyncThunk("addGrooming",async(payload,thunkAPI)=>{
+    try {
+        let {data}=await trainerServices.addGrooming(payload)
+        console.log(data);
+        return data
+        
+    } catch (error) {
+       return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Failed to add trainers"
+      ) 
+    }
+})
+
+export const allGroomingThunk=createAsyncThunk("allGrooming",async(_,thunkAPI)=>{
+    try {
+        let {data}=await trainerServices.getAllGrooming()
+        // console.log(data);
+        return data
+        
+    } catch (error) {
+       return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Failed to add trainers"
+      ) 
+    }
+})
+
 const initialState = {
   isLogged: false,
   username: null,
@@ -66,6 +93,7 @@ const initialState = {
   error: null,
   allTrainers: [],
   isTrainersPresent: true,
+  allGrooming:[]
 }
 
 export const AuthSlice = createSlice({
@@ -143,7 +171,7 @@ export const AuthSlice = createSlice({
         console.log(action.payload);
         // console.log(state.allTrainers);
         
-        state.allTrainers = [state.allTrainers,action.payload.trainer]
+        state.allTrainers = [...state.allTrainers,action.payload.trainer]
         state.isTrainersPresent = action.payload?.length > 0
         state.loading = false
       })
@@ -152,7 +180,35 @@ export const AuthSlice = createSlice({
         state.isTrainersPresent = false
         state.loading = false
         state.error = action.payload
+      }) .addCase(allGroomingThunk.pending, (state) => {
+        state.loading = true
+        state.error = null
       })
+      .addCase(allGroomingThunk.fulfilled, (state, action) => {
+        state.allGrooming = action.payload
+        state.loading = false
+      })
+      .addCase(allGroomingThunk.rejected, (state, action) => {
+        state.allGrooming = []
+        state.loading = false
+        state.error = action.payload
+      }).addCase(addGroomingThunk.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(addGroomingThunk.fulfilled, (state, action) => {
+        console.log(action.payload);
+        // console.log(state.allTrainers);
+        
+        state.allGrooming = [...state.allGrooming,action.payload.grooming]
+        state.loading = false
+        toast.success(action.payload.msg)
+      })
+      .addCase(addGroomingThunk.rejected, (state, action) => {
+        state.allGrooming = state.allGrooming
+        state.loading = false
+        state.error = action.payload
+      }) 
   },
 })
 

@@ -3,7 +3,7 @@ import Nav from '../nav/Nav'
 import { Outlet } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../../loading/Loader';
-import { getAllTrainersThunk } from '../../../slices/AuthSlice';
+import { allGroomingThunk, getAllTrainersThunk, } from '../../../slices/AuthSlice';
 
 const Home = () => {
   let dispatch=useDispatch()
@@ -11,6 +11,7 @@ const Home = () => {
     // console.log("hiiii");
     
     dispatch(getAllTrainersThunk())
+    dispatch(allGroomingThunk())
   },[])
 const {loading}=useSelector((state)=>state.authReducer)
 console.log(loading);

@@ -15,6 +15,19 @@ loginTrainer:async(payload)=>{
         return data
 
 },
+addGrooming:async(payload)=>{
+
+        let data=await AxiosInstance.post("/groomings",payload)
+        // console.log(data);
+        return data
+
+},getAllGrooming:async()=>{
+
+        let data=await AxiosInstance.get("/groomings")
+        // console.log(data);
+        return data
+
+},
 getAllTrainer:async()=>{
 
         let data=await AxiosInstance.get("/trainers")
