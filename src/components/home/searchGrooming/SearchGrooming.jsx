@@ -1,9 +1,10 @@
 // SearchGrooming.jsx
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FaCalendar, FaUsers, FaLaptop, FaClock } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { FaCircleDot } from "react-icons/fa6";
+import { deleteGroomingThunk } from "../../../slices/AuthSlice";
 const InterviewCard = ({ data, onUpdate, onDelete, colo }) => {
   // console.log(data.reasons);
   
@@ -16,6 +17,7 @@ const InterviewCard = ({ data, onUpdate, onDelete, colo }) => {
         <span className="px-3 py-1 text-sm rounded-full bg-blue-100 text-blue-600 font-medium flex gap-3 justify-center items-center">
           {data.mode} {data.mode=="Online"&& <FaCircleDot className="fill-green-600"/>}
         </span>
+        
       </div>
 
       {/* Subject & Trainers */}
@@ -116,6 +118,7 @@ const InterviewCard = ({ data, onUpdate, onDelete, colo }) => {
 const SearchGrooming = () => {
   let { allGrooming } = useSelector((state) => state.authReducer);
   const navigate = useNavigate();
+  const dispatch=useDispatch()
 
   const handleUpdate = (item) => {
     navigate("/update-grooming", { state: item });
@@ -123,7 +126,7 @@ const SearchGrooming = () => {
 
   const handleDelete = (id) => {
     console.log("Delete clicked:", id);
-    // dispatch(deleteGroomingThunk(id))
+    dispatch(deleteGroomingThunk(id))
   };
 
   return (

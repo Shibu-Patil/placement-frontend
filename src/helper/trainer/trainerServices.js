@@ -33,6 +33,12 @@ addGrooming:async(payload)=>{
         // console.log(data);
         return data
 
+},deleteGrooming:async(id)=>{
+
+        let data=await AxiosInstance.delete(`/groomings/${id}`)
+        // console.log(data);
+        return data
+
 },
 getAllTrainer:async()=>{
 
@@ -47,6 +53,9 @@ addTrainer:async(payload)=>{
         // console.log(data);
         return data
 
+},graphData:async()=>{
+        let data =await AxiosInstance.get("/graph")
+        return data
 }
 } 
 

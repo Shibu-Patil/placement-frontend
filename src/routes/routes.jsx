@@ -7,6 +7,7 @@ import AddGrooming from "../components/home/addGrooming/AddGrooming";
 import AddTrainers from "../components/home/addTrainers/AddTrainers";
 import SearchGrooming from "../components/home/searchGrooming/SearchGrooming";
 import UpdateGrooming from "../components/home/updateGrooimg/UpdateGrooming";
+import PrivateRoutes from "./privateRoute/PrivateRoutes";
 
 const routes= createBrowserRouter([
     {
@@ -17,7 +18,7 @@ const routes= createBrowserRouter([
         element:<Register></Register>
     },{
         path:"/",
-        element:<Home></Home>,
+        element:<PrivateRoutes><Home></Home></PrivateRoutes>,
         children:[
             {
                 index:true,
