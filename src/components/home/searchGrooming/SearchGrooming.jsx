@@ -5,12 +5,14 @@ import { FaCalendar, FaUsers, FaLaptop, FaClock } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { FaCircleDot } from "react-icons/fa6";
 import { deleteGroomingThunk } from "../../../slices/AuthSlice";
+import { CgSearchFound } from "react-icons/cg";
+import { MdDownloadForOffline } from "react-icons/md";
 const InterviewCard = ({ data, onUpdate, onDelete, colo }) => {
   // console.log(data.reasons);
   
   return (
     <div className={`w-full max-w-lg rounded-2xl shadow-lg p-6 hover:shadow-2xl transition duration-300 border border-gray-200 ${colo}`}>
-      
+
         <h2 className="text-lg font-bold text-gray-800">Deal Name: {data.dealName}</h2>
       {/* Company + Mode */}
       <div className="flex items-center justify-between mb-4">
@@ -132,7 +134,13 @@ const SearchGrooming = () => {
 
   return (
     <div className="min-h-screen p-6">
+        <div className="w-full h-[40px] flex justify-around">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">All Groomings</h1>
+          <div className="w-1/2 border-2 h-full flex items-center p-2 rounded-2xl">
+            <input type="text" className="border-0 size-full p-2 outline-0" />
+            <CgSearchFound  className="text-3xl"/>
+          </div>
+        </div>
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {allGrooming?.map((item) => (
           <InterviewCard
