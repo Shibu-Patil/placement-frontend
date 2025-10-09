@@ -15,26 +15,40 @@ const UpdateGrooming = () => {
   const { loading, allTrainers } = useSelector((state) => state.authReducer);
 
   // Pre-fill formData from state
-  const [formData, setFormData] = useState({
-    companyName: state?.companyName || "",
-    dateOfRequirement: state?.dateOfRequirement
-      ? new Date(state.dateOfRequirement)
-      : null,
-    dateOfInterview: state?.dateOfInterview
-      ? new Date(state.dateOfInterview)
-      : null,
-    skills: state?.skills?.join(", ") || "",
-    trainerNames: state?.trainerNames || [],
-    subject: state?.subject || "",
-    subjectTrainerName: state?.subjectTrainerName || "",
-    groomingDays: state?.groomingDays || "",
-    mode: state?.mode || "",
-    totalStudents: state?.totalStudents || "",
-    attendedStudents: state?.attendedStudents || "",
-    placedStudents: state?.placedStudents || "",
-    rejectedStudents: state?.rejectedStudents || "",
-    reasons: state?.reasons[0] || "",
-  });
+const [formData, setFormData] = useState({
+  dealName: state?.dealName || "",
+  companyName: state?.companyName || "",
+  dateOfRequirement: state?.dateOfRequirement ? new Date(state.dateOfRequirement) : null,
+  dateOfInterview: state?.dateOfInterview ? new Date(state.dateOfInterview) : null,
+  skills: state?.skills?.join(", ") || "",
+  trainerNames: state?.trainerNames || [],
+  subject: state?.subject || "",
+  subjectTrainerName: state?.subjectTrainerName || "",
+  groomingDays: state?.groomingDays || "",
+  mode: state?.mode || "",
+  totalStudents: state?.totalStudents || "",
+  attendedStudents: state?.attendedStudents || "",
+  placedStudents: [state?.placedStudents || 0],
+  rejectedStudents: [state?.rejectedStudents || 0],
+  reasons: state?.reasons[0] || "",
+  position: state?.position || "",
+  targetGivenByDt: state?.targetGivenByDt || "",
+  noOfStudentsSchedule: state?.noOfStudentsSchedule || "",
+  scheduleReceiveDateFromDt: state?.scheduleReceiveDateFromDt ? new Date(state.scheduleReceiveDateFromDt) : null,
+  addedByHR: state?.addedByHR || "",
+  scheduleUpdateInSoftware: state?.scheduleUpdateInSoftware || "",
+  status: state?.status || "",
+});
+
+const [rounds, setRounds] = useState(state?.rounds || []);
+const toggleRound = (round) => {
+  if (rounds.includes(round)) {
+    setRounds(rounds.filter((r) => r !== round)); // Remove if already selected
+  } else {
+    setRounds([...rounds, round]); // Add if not selected
+  }
+};
+
 
   const [selectedTrainers, setSelectedTrainers] = useState(
     state?.trainerNames || []
@@ -53,52 +67,39 @@ const UpdateGrooming = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    // // Validation: placed + rejected <= totalStudents
-    // if (
-    //   Number(formData.placedStudents) + Number(formData.rejectedStudents) >
-    //   Number(formData.totalStudents)
-    // ) {
-    //   alert("Placed + Rejected students cannot exceed Total Students");
-    //   return;
-    // }
+  const payload = {
+    ...formData,
+    trainerNames: selectedTrainers,
+    skills: formData.skills.split(",").map((s) => s.trim()),
+    dateOfRequirement: formData.dateOfRequirement ? formData.dateOfRequirement.toISOString().split("T")[0] : "",
+    dateOfInterview: formData.dateOfInterview ? formData.dateOfInterview.toISOString().split("T")[0] : "",
+    scheduleReceiveDateFromDt: formData.scheduleReceiveDateFromDt
+      ? formData.scheduleReceiveDateFromDt.toISOString().split("T")[0]
+      : "",
+    groomingDays: Number(formData.groomingDays),
+    totalStudents: Number(formData.totalStudents),
+    attendedStudents: Number(formData.attendedStudents),
+    placedStudents: [Number(formData.placedStudents)],
+    rejectedStudents: [Number(formData.rejectedStudents)],
+    position: Number(formData.position),
+    targetGivenByDt: Number(formData.targetGivenByDt),
+    noOfStudentsSchedule: Number(formData.noOfStudentsSchedule),
+    rounds,
+    id: state?._id,
+  };
 
-    console.log(formData.reasons);
-    
-
-    const payload = {
-      ...formData,
-      reasons:[formData.reasons],
-      trainerNames: selectedTrainers,
-      skills: formData.skills.split(",").map((s) => s.trim()),
-      dateOfRequirement: formData.dateOfRequirement
-        ? formData.dateOfRequirement.toISOString().split("T")[0]
-        : "",
-      dateOfInterview: formData.dateOfInterview
-        ? formData.dateOfInterview.toISOString().split("T")[0]
-        : "",
-      groomingDays: Number(formData.groomingDays),
-      totalStudents: Number(formData.totalStudents),
-      attendedStudents: Number(formData.attendedStudents),
-      placedStudents: [Number(formData.placedStudents)],
-      rejectedStudents: [Number(formData.rejectedStudents)],
-      id: state?._id,
-    };
-
-    console.log(payload);
-
-    // Example: dispatch your update thunk here
-    try {
-      const resultAction = await dispatch(updateGroomingThunk(payload));
-      if (updateGroomingThunk.fulfilled.match(resultAction)) {
-        navigate("/search-grooming");
-      } else {
-        console.log("Failed to update grooming:", resultAction.payload);
-      }
-    } catch (err) {
-      console.error("Error updating grooming:", err);
+  try {
+    const resultAction = await dispatch(updateGroomingThunk(payload));
+    if (updateGroomingThunk.fulfilled.match(resultAction)) {
+      navigate("/search-grooming");
+    } else {
+      console.log("Failed to update grooming:", resultAction.payload);
     }
+  } catch (err) {
+    console.error("Error updating grooming:", err);
+  }
   };
 
   const inputClass =
@@ -467,6 +468,58 @@ const UpdateGrooming = () => {
                 Reason of Rejection
               </label>
             </div>
+
+
+            <div className={`${inputClass} ${formData.dealName ? "border-0 border-b-2 rounded-none" : ""}`}>
+  <input
+    type="text"
+    name="dealName"
+    value={formData.dealName}
+    onChange={handleChange}
+    className="size-full outline-0 px-2"
+    placeholder="Deal Name"
+  />
+</div>
+
+{/* Position & Target */}
+<div className="flex gap-2">
+  <input type="number" name="position" value={formData.position} onChange={handleChange} className={`${inputClass} pl-2`} placeholder="Position" />
+  <input type="number" name="targetGivenByDt" value={formData.targetGivenByDt} onChange={handleChange} className={`${inputClass} pl-2`} placeholder="Target Given By DT" />
+</div>
+
+{/* No of Students Schedule & Schedule Receive Date */}
+<div className="flex gap-2">
+  <input type="number" name="noOfStudentsSchedule" value={formData.noOfStudentsSchedule} onChange={handleChange} className={`${inputClass} pl-2`} placeholder="No of Students Schedule" />
+  <DatePicker selected={formData.scheduleReceiveDateFromDt} onChange={(date) => setFormData(prev => ({ ...prev, scheduleReceiveDateFromDt: date }))} placeholderText="Schedule Receive Date" className={inputClass} />
+</div>
+
+{/* Added by HR & Schedule Update */}
+<div className="flex gap-2">
+  <select name="addedByHR" value={formData.addedByHR} onChange={handleChange} className={inputClass}>
+    <option value="">-- Select HR --</option>
+    <option value="bhumika">Bhumika</option>
+    <option value="amrutha">Amrutha</option>
+    <option value="supraja">Supraja</option>
+  </select>
+  <select name="scheduleUpdateInSoftware" value={formData.scheduleUpdateInSoftware} onChange={handleChange} className={inputClass}>
+    <option value="">-- Schedule Updated In Software --</option>
+    <option value="true">True</option>
+    <option value="false">False</option>
+  </select>
+</div>
+
+{/* Rounds */}
+<div className="p-2 w-full border-1 rounded-2xl flex flex-col gap-3">
+  <span className="font-bold">Select Round Type</span>
+  <div className="flex gap-3 flex-wrap">
+    {["Telephonic", "Online Test", "Aptitude", "Technical Written", "Face to Face", "Managerial Round", "HR"].map((round) => (
+      <label key={round} className="flex gap-1 items-center cursor-pointer">
+        <input type="checkbox" checked={rounds.includes(round)} onChange={() => toggleRound(round)} />
+        <span>{round}</span>
+      </label>
+    ))}
+  </div>
+</div>
 
             {/* Submit */}
             <div className="flex w-full min-h-[40px] justify-center">

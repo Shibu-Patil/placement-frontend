@@ -11,6 +11,7 @@ const InterviewCard = ({ data, onUpdate, onDelete, colo }) => {
   return (
     <div className={`w-full max-w-lg rounded-2xl shadow-lg p-6 hover:shadow-2xl transition duration-300 border border-gray-200 ${colo}`}>
       
+        <h2 className="text-lg font-bold text-gray-800">Deal Name: {data.dealName}</h2>
       {/* Company + Mode */}
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-bold text-gray-800">{data.companyName}</h2>
