@@ -1,7 +1,30 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { NavLink } from 'react-router-dom'
+import { IoMdArrowDroprightCircle } from "react-icons/io";
+
 
 const Nav = () => {
+    const scrollRef = useRef(null);
+  const [showArrow, setShowArrow] = useState(true);
+
+  const checkScroll = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 5;
+    setShowArrow(!atEnd);
+  };
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+
+    checkScroll();
+    el.addEventListener("scroll", checkScroll);
+
+    return () => el.removeEventListener("scroll", checkScroll);
+  }, []);
+
   return (
     <nav className='flex w-full h-16 bg-yellow-300 shadow-[0px_0px_20px_2px_#111] sticky top-0 pr-6'>
       <div className='w-1/4 h-full'>
@@ -50,12 +73,21 @@ const Nav = () => {
 
       <div className='w-1/4'></div>
 
-      <div className='w-2/4 h-full flex items-center justify-end font-semibold gap-12 text-nowrap'>
+      <div className='w-2/4 h-full flex items-center  font-semibold gap-12 text-nowrap overflow-x-scroll'         ref={scrollRef}
+>
         <NavLink to="/">Home</NavLink>
         <NavLink to="/add-groomming">Add Grooming</NavLink>
         <NavLink to="/add-trainers">Add Trainers</NavLink>
         <NavLink to="/search-grooming">Search Grooming</NavLink>
+        <NavLink>Download Hr Report</NavLink>
+        <NavLink>Trainers performance</NavLink>
       </div>
+
+      {showArrow && (
+        <div className="fixed right-1 top-5 text-2xl text-gray-700 animate-pulse">
+          <IoMdArrowDroprightCircle />
+        </div>
+      )}
     </nav>
   )
 }
