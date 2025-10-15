@@ -1,0 +1,55 @@
+Req:1
+Company Name :Test Yantra
+Role: Developer
+Job Location: Bangalore
+Skills Required: Core Java, Web technologies ,& React JS , spring boot ongoing or completed ( Should be ready to work as a Full stack Java developer)
+YOP:2024,2025 only
+Degree:BE,BTech,BCA,Bsc( cs,IS,IT)
+Percentage -Any
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+Req:2
+Company Name :Test Yantra
+Role: Solution consultant
+Degree:BE,BTech,BCA, MCA,Bsc( cs,IS,IT)
+Roles and responsibilities:  Sales role with 40% Technical and 60% Sales/Client
+Technical Sales Executive who can explain our products to clients, understand their needs, and help close deals. The role is 60% sales and communication, 40% technical understanding—ideal for someone who enjoys both people and products.Learn how our products/services work,Answer basic technical questions from clients
+YOP:2021 ,2022,2023,2024,2025
+Skills: Any
+Job Location: Bangalore
+Job Type: shift wise (candidates can select any shift)
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+Req:3
+Company Name :Test Yantra
+Role: Solution engineer
+Degree:BE,BTech,BCA, MCA,Bsc( cs,IS,IT)
+Roles and responsibilities: Solution Engineer who enjoys solving technical problems and building smart solutions. In this role, you’ll mostly (about 80% of the time) focus on technical tasks like creating product demos, writing code, and helping integrate our product with other systems. The rest of the time (about 20%), you’ll show what you’ve built to clients or team members through demos and help explain how things work.
+Skills:Java Completed
+Percentage -70%throughout
+YOP:2021 ,2022,2023,2024,2025
+Job Location: Bangalore
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Req:4
+Company Name :Test Yantra
+Role: QA engineer
+YOP:2025
+Skills:Java+  manual testing
+Percentage -80%throughout(only qspiders)
+Job Location: Bangalore
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Req:5
+Company Name :Test Yantra
+Role: Technical Trainer(associate software engineer)
+YOP:Any
+Skills: Any
+Percentage -70%throughout
+Job Location: Bangalore
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Req:6
+Company Name :Test Yantra
+Role: Automation engineer Intern
+YOP: 2024 and below 
+Skills:Java+ manual testing
+Percentage -Any percentage (only qspiders)
+Job Location: Bangalore
+No pay for 3month during internship, based on performance after 3 months -3LPA/Full time
+----------------------------------------------------------------------------------------------------------

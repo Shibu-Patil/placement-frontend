@@ -1,12 +1,20 @@
 @echo off
 cd /d "%~dp0"
-echo Starting Node.js app...
-start "" npm run dev
 
-:: Wait a few seconds for the server to start
+echo ===================================================
+echo Installing dependencies...
+echo ===================================================
+call npm install
+
+echo ===================================================
+echo Starting development server...
+echo ===================================================
+start "Vite Server" cmd /k "npm run dev"
+
+:: Wait 5 seconds to let the server start
 timeout /t 5 /nobreak >nul
 
-:: Open the app in Google Chrome (replace the URL if different)
-start chrome http://localhost:5173
+echo Opening app in Chrome...
+start "" "chrome" "http://localhost:5173"
 
 pause

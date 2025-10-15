@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import Loader from '../../loading/Loader'
 import { addTrainerThunk } from '../../../slices/AuthSlice'
+import toast from 'react-hot-toast'
 
 const AddTrainers = () => {
       const disptch=useDispatch()
@@ -23,9 +24,19 @@ const handelChange=(e)=>{
 const handelSubmit=(e)=>{
     e.preventDefault()
     let {name,subject}=formData
-    let payload={name,subject}
-    console.log(payload);
-    disptch(addTrainerThunk(payload))
+    let pay={name,subject};
+    // console.log(payload);
+(async()=>{
+try {
+            let {payload} =await disptch(addTrainerThunk(pay))
+            if(payload.msg=="Trainer added successfully"){
+                toast.success(payload.msg)
+            }
+} catch (error) {
+    toast.error(error)
+}
+})()
+    
     // console.log(isLogged);
     
 }
@@ -81,6 +92,15 @@ const handelSubmit=(e)=>{
                                     <option value="python">Python</option>
                                     <option value="webtech">Web Tech</option>
                                     <option value="react">React</option>
+                                    <option value="manual-testing">Manual Testing</option>
+                                    <option value="automation">Automation</option>
+                                    <option value="django">Django</option>
+                                    <option value="advance-java">Advance Java</option>
+                                    <option value="sql">SQL</option>
+                                    <option value="apptitude">Apptitude</option>
+                                    <option value="java-dsa">Java DSA</option>
+                                    <option value="api-testing">API Testing</option>
+                                    <option value="data-analysis">Data Analysis</option>
                                 </select>
                             </div>
                             {/* <div>

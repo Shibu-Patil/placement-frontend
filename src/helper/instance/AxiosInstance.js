@@ -1,5 +1,5 @@
 import axios from "axios";
-const BASEURL="http://192.168.0.46:5000/api"
+const BASEURL=`http://${window.location.hostname}:5000/api`
 let AxiosInstance=axios.create({
     baseURL:BASEURL
 })
