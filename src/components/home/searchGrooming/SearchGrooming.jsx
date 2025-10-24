@@ -123,6 +123,9 @@ const SearchGrooming = () => {
   const navigate = useNavigate();
   const dispatch=useDispatch()
 
+  console.log(allGrooming);
+  
+
   const handleUpdate = (item) => {
     navigate("/update-grooming", { state: item });
   };
