@@ -14,6 +14,8 @@ const UpdateGrooming = () => {
   const { state } = useLocation();
   const { loading, allTrainers } = useSelector((state) => state.authReducer);
 
+  console.log(state);
+  
   // Pre-fill formData from state
 const [formData, setFormData] = useState({
   dealName: state?.dealName || "",
@@ -21,9 +23,9 @@ const [formData, setFormData] = useState({
   dateOfRequirement: state?.dateOfRequirement ? new Date(state.dateOfRequirement) : null,
   dateOfInterview: state?.dateOfInterview ? new Date(state.dateOfInterview) : null,
   skills: state?.skills?.join(", ") || "",
-  trainerNames: state?.trainerNames || [],
+  trainerNames: state?.trainers || [],
   subject: state?.subject || "",
-  subjectTrainerName: state?.subjectTrainerName || "",
+  subjectTrainerName: state?.subjectTrainer.name || "",
   groomingDays: state?.groomingDays || "",
   mode: state?.mode || "",
   totalStudents: state?.totalStudents || "",
@@ -39,20 +41,22 @@ const [formData, setFormData] = useState({
   scheduleUpdateInSoftware: state?.scheduleUpdateInSoftware || "",
   status: state?.status || "",
 });
+// console.log(formData);
 
-const [rounds, setRounds] = useState(state?.rounds || []);
+
+const [rounds, setRounds] = useState(state?.interviewRounds?.map(r => r.roundType) || []);
+
 const toggleRound = (round) => {
   if (rounds.includes(round)) {
-    setRounds(rounds.filter((r) => r !== round)); // Remove if already selected
+    setRounds(rounds.filter((r) => r !== round));
   } else {
-    setRounds([...rounds, round]); // Add if not selected
+    setRounds([...rounds, round]);
   }
 };
 
-
-  const [selectedTrainers, setSelectedTrainers] = useState(
-    state?.trainerNames || []
-  );
+const [selectedTrainers, setSelectedTrainers] = useState(
+  state?.trainers?.map((t) => t.name) || []
+);
 
   const handleChange = (e) => {
     const { name, value, multiple, options } = e.target;
@@ -86,9 +90,17 @@ const toggleRound = (round) => {
     position: Number(formData.position),
     targetGivenByDt: Number(formData.targetGivenByDt),
     noOfStudentsSchedule: Number(formData.noOfStudentsSchedule),
-    rounds,
+    // interviewRounds:rounds,
     id: state?._id,
+    interviewRounds: rounds.map((round) => ({
+  roundType: round,
+  status: "Completed",
+  remarks: "",
+}))
   };
+
+  console.log(payload);
+  
 
   try {
     const resultAction = await dispatch(updateGroomingThunk(payload));
@@ -146,6 +158,9 @@ const toggleRound = (round) => {
       </div>
     );
   };
+
+  // console.log(selectedTrainers);
+  
 
   return (
     <>
@@ -244,11 +259,12 @@ const toggleRound = (round) => {
             </div>
 
             {/* Trainers */}
-            <TrainerDropdown
-              allTrainers={allTrainers}
-              selectedTrainers={selectedTrainers}
-              setSelectedTrainers={setSelectedTrainers}
-            />
+<TrainerDropdown
+  allTrainers={allTrainers}
+  selectedTrainers={selectedTrainers}
+  setSelectedTrainers={setSelectedTrainers}
+/>
+
 
             {/* Subject */}
             <div
@@ -291,7 +307,7 @@ const toggleRound = (round) => {
                 onChange={handleChange}
                 className="w-full outline-0"
               >
-                <option value="">-- Select Subject Trainer --</option>
+                <option value={formData.subjectTrainerName}>{formData.subjectTrainerName}</option>
                 {allTrainers.map((ele) => (
                   <option key={ele._id} value={ele.name} className="capitalize">
                     {ele.name}

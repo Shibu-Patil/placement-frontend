@@ -33,6 +33,7 @@ const AddGrooming = () => {
     addedByHR: "",
     scheduleUpdateInSoftware: "",
     status: "",
+    interviewRounds:[],
   });
 
   const [selectedTrainers, setSelectedTrainers] = useState([]);
@@ -61,41 +62,47 @@ const AddGrooming = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const payload = {
-      ...formData,
-      trainerNames: selectedTrainers,
-      skills: formData.skills.split(",").map((s) => s.trim()),
-      dateOfRequirement: formData.dateOfRequirement
-        ? formData.dateOfRequirement.toISOString().split("T")[0]
-        : "",
-      dateOfInterview: formData.dateOfInterview
-        ? formData.dateOfInterview.toISOString().split("T")[0]
-        : "",
-      scheduleReceiveDateFromDt: formData.scheduleReceiveDateFromDt
-        ? formData.scheduleReceiveDateFromDt.toISOString().split("T")[0]
-        : "",
-      groomingDays: Number(formData.groomingDays),
-      totalStudents: Number(formData.totalStudents),
-      attendedStudents: Number(formData.attendedStudents),
-      position: Number(formData.position),
-      targetGivenByDt: Number(formData.targetGivenByDt),
-      noOfStudentsSchedule: Number(formData.noOfStudentsSchedule),
-      rounds, // ✅ Include selected rounds
-    };
+const payload = {
+  ...formData,
+  trainerNames: selectedTrainers,
+  skills: formData.skills.split(",").map((s) => s.trim()),
+  dateOfRequirement: formData.dateOfRequirement
+    ? formData.dateOfRequirement.toISOString().split("T")[0]
+    : "",
+  dateOfInterview: formData.dateOfInterview
+    ? formData.dateOfInterview.toISOString().split("T")[0]
+    : "",
+  scheduleReceiveDateFromDt: formData.scheduleReceiveDateFromDt
+    ? formData.scheduleReceiveDateFromDt.toISOString().split("T")[0]
+    : "",
+  groomingDays: Number(formData.groomingDays),
+  totalStudents: Number(formData.totalStudents),
+  attendedStudents: Number(formData.attendedStudents),
+  position: Number(formData.position),
+  targetGivenByDt: Number(formData.targetGivenByDt),
+  noOfStudentsSchedule: Number(formData.noOfStudentsSchedule),
 
-    console.log(payload);
-    
+  // ✅ Correct mapping for MongoDB schema
+  interviewRounds: rounds.map((round) => ({
+    roundType: round,
+    status: formData.status, // default
+    remarks: "", // optional placeholder
+  })),
+};
 
-    try {
-      const resultAction = await dispatch(addGroomingThunk(payload));
-      if (addGroomingThunk.fulfilled.match(resultAction)) {
-        navigate("/search-grooming");
-      } else {
-        console.log("Failed to add grooming:", resultAction.payload);
-      }
-    } catch (err) {
-      console.error("Error adding grooming:", err);
-    }
+console.log(payload);
+
+try {
+  const resultAction = await dispatch(addGroomingThunk(payload));
+  if (addGroomingThunk.fulfilled.match(resultAction)) {
+    navigate("/search-grooming");
+  } else {
+    console.error("Failed to add grooming:", resultAction.payload);
+  }
+} catch (err) {
+  console.error("Error adding grooming:", err);
+}
+
   };
 
   const inputClass =
